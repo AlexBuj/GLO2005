@@ -1,9 +1,27 @@
+import os
 from flask import Flask
 from flask import render_template
 import requests
-
+import pymysql.cursors
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+load_dotenv()
+app.config['MYSQL_HOST'] = os.environ.get("HOST")
+app.config['MYSQL_PORT'] = int(os.environ.get("PORT"))
+app.config['MYSQL_USER'] = os.environ.get("USER")
+app.config['MYSQL_PASSWORD'] = os.environ.get("PASSWORD")
+app.config['MYSQL_DB'] = os.environ.get("DATABASE")
+
+mysql = pymysql.connect(
+    host=app.config['MYSQL_HOST'],
+    port=app.config['MYSQL_PORT'],
+    user=app.config['MYSQL_USER'],
+    password=app.config['MYSQL_PASSWORD'],
+    db=app.config['MYSQL_DB']
+)
+
 
 def get_api_info():
     '''
@@ -23,12 +41,14 @@ def get_api_info():
 
     return data
 
+
 @app.route('/')
 def index():
     '''
     Affiche la page d'acceuil.
     '''
     return render_template("index.html")
+
 
 @app.route("/inscription")
 def inscription():
@@ -37,10 +57,14 @@ def inscription():
     '''
     return render_template("inscription.html")
 
-@app.route('/hello/')
-@app.route('/hello/<name>')
-def hello(name=None):
-    return render_template('index.html', name=name)
+
+@app.route('/main')
+def main():
+    test_sql = 'SELECT * FROM utilisateurs;'
+    cursor = mysql.cursor()
+    cursor.execute(test_sql)
+    result = cursor.fetchall()
+    return render_template("main.html", result=result)
 
 
 if __name__ == '__main__':
