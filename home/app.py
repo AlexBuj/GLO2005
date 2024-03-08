@@ -23,23 +23,42 @@ mysql = pymysql.connect(
 )
 
 
-def get_api_info():
+def get_stock_info(symbol):
     '''
-    Fonction qui récupère les données sur l'API. KEY: X58RBG8U32Y66801
+    Fonction qui récupère les données sur l'API. KEY: 2c60e6e984a34692611edd82e4b4f308
     '''
-    api_key = 'X58RBG8U32Y66801'
-    symbols = ['IBM', 'AAPL', 'GOOGL']  # Liste des symboles à récupérer
-    for symbol in symbols:
-        url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={api_key}'
+    api_key = '2c60e6e984a34692611edd82e4b4f308'
+    url = f'https://financialmodelingprep.com/api/v3/quote-short/{symbol}?apikey={api_key}'
 
-        try:
-            r = requests.get(url, timeout=30)
-            r.raise_for_status()  # Lève une exception si la demande échoue
-            data = r.json()
-        except requests.exceptions.RequestException as e:
-            print(f"Une erreur s'est produite lors de la récupération des données pour le symbole {symbol}: {e}")
+    response = requests.get(url)
+    if response.status_code == 200:
+        stock_data = response.json()
+        if stock_data:
+            return stock_data[0]  # Retourne les données du titre
+        else:
+            return None
+    else:
+        print("Erreur lors de la requête API:", response.status_code)
+        return None
 
-    return data
+
+def get_company_info(symbol):
+    '''
+    Fonction qui récupère les données sur l'API. KEY: 2c60e6e984a34692611edd82e4b4f308
+    '''
+    api_key = '2c60e6e984a34692611edd82e4b4f308'
+    url = f'https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={api_key}'
+
+    response = requests.get(url)
+    if response.status_code == 200:
+        company_data = response.json()
+        if company_data:
+            return company_data[0]  # Retourne les données de l'entreprise trouvée
+        else:
+            return None
+    else:
+        print("Erreur lors de la requête API:", response.status_code)
+        return None
 
 
 @app.route('/')
@@ -64,7 +83,9 @@ def main():
     cursor = mysql.cursor()
     cursor.execute(test_sql)
     result = cursor.fetchall()
-    return render_template("main.html", result=result)
+    symbole = get_stock_info('GOOG')
+    cie = get_company_info('GOOG')
+    return render_template("main.html", result=result, symbole=symbole, cie=cie)
 
 
 if __name__ == '__main__':

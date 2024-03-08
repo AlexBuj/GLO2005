@@ -5,6 +5,19 @@
     <title>main</title>
 </head>
 <body>
+    <!-- Test info titre -->
+    {% for info in symbole %}
+    <p>{{ info }} : {{ symbole[info] }}</p>
+    {% endfor %}
+
+    <!-- Test BD -->
     <p>{{ result }}</p>
+
+    <!-- Test info cie -->
+    {% for info in cie %}
+    <p>{{ info }} : {{ cie[info] }}</p>
+    {% endfor %}
+
+
 </body>
 </html>
