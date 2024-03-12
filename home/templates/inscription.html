@@ -16,17 +16,15 @@
 
     <main id="main">
         <div id="box1">
-           <form id="sign">
-                <label>First name</label><br>
-                <input type="text"><br>
-                <label>Last name</label><br>
-                <input type="text"><br>
+           <form id="sign" method="POST" action="/inscription">
+                <label>Name</label><br>
+                <input type="text" name="name"><br>
                 <label>Email address</label><br>
-                <input type="text"><br>
+                <input type="text" name="email"><br>
                 <label>Age</label><br>
-                <input type="text"><br>
+                <input type="text" name="age"><br>
                 <label>Password</label><br>
-                <input type="text"><br><br>
+                <input type="text" name="password"><br><br>
                 <button id="log_button">Confirmed</button>
 
            </form>

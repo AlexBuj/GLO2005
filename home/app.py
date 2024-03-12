@@ -1,7 +1,9 @@
 import os
-from flask import Flask
+from flask import Flask, request
 from flask import render_template
 import requests
+import uuid
+import random
 import pymysql.cursors
 from dotenv import load_dotenv
 
@@ -69,11 +71,23 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/inscription")
+@app.route("/inscription", methods=['GET', 'POST'])
 def inscription():
     '''
     Affiche la page d'inscription.
     '''
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        age = request.form.get("age")
+        password = request.form.get("password")
+
+        cursor = mysql.cursor()
+        cursor.execute("INSERT INTO utilisateurs (id, nom, courriel, age, mdp, premium) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (random.randint(0,1000000), name, email, age, password, True))
+        mysql.commit()
+
+        cursor.close()
     return render_template("inscription.html")
 
 
