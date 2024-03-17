@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request
+from flask import Flask, request, redirect, url_for
 from flask import render_template
 import requests
 import uuid
@@ -63,11 +63,27 @@ def get_company_info(symbol):
         return None
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def index():
     '''
     Affiche la page d'acceuil.
     '''
+    if request.method == "POST":
+        username = request.form.get("log")
+        password = request.form.get("password")
+        findUser = 'SELECT * FROM utilisateurs WHERE courriel = %s AND mdp = %s;'
+        print(username)
+        print(password)
+        cursor = mysql.cursor()
+        cursor.execute(findUser, (username, password))
+        user = cursor.fetchone()
+        print(user)
+        cursor.close()
+        if user:
+            return redirect("/main")
+        else:
+            return redirect("/inscription")
+
     return render_template("index.html")
 
 
@@ -81,10 +97,11 @@ def inscription():
         email = request.form.get("email")
         age = request.form.get("age")
         password = request.form.get("password")
+        premium = request.form.get("premium") == "true"
 
         cursor = mysql.cursor()
         cursor.execute("INSERT INTO utilisateurs (id, nom, courriel, age, mdp, premium) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (random.randint(0,1000000), name, email, age, password, True))
+                       (random.randint(0, 1000000), name, email, age, password, premium))
         mysql.commit()
 
         cursor.close()

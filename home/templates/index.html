@@ -19,11 +19,14 @@
             <p id="log_title">Login</p>
             <br>
             <nav id="log_nav">
-                <label for="log">Username</label><br>
-                <input type="email"><br><br>
-                <label for="password">Password</label><br>
-                <input type="text"><br><br>
-                <a href="{{ url_for('main') }}"><button id="log_button">Login</button></a>
+                <form id="login_form" method="POST" action="/">
+                    <label>Username</label><br>
+                    <input type="email" name="log"><br><br>
+                    <label>Password</label><br>
+                    <input type="text" name="password"><br><br>
+                    <button type="submit" id="log_button">Login</button>
+                    <!--<a href="{{ url_for('main') }}"><button id="log_button">Login</button></a> -->
+                </form>
             </nav>
             <br><br>
             <p id="inscription">Or <a href="{{ url_for('inscription') }}"><u>Sign Up</u></a></p>
