@@ -6,6 +6,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
 </head>
 <body>
-
+    <header>
+        <div id="cie">
+               <h2>Apercu de {{cie}} </h2>
+        </div>
+    </header>
+    <div>
+        <ul>
+            <li> Nom officiel: {{cie}} </li>
+            <li id="ticker">  Ticker: {{ticker}}</li>
+            <li id="secteur"> Secteur d'opération: {{secteur}}</li>
+            <li id="description"> Description: {{description}}</li>
+            <li id="revenueTTM"> RevenuesTTM: {{revenueTTM}}</li>
+            <li id="profitTTM"> ProfitTTM: {{profitTTM}}</li>
+        </ul>
+    </div>
 </body>
 </html>
