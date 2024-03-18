@@ -1,0 +1,97 @@
+body {
+    background-color: lightgrey;
+    /*background-image: url('/static/bg.jpg');
+    background-size:cover;
+    background-repeat: no-repeat;*/
+}
+
+#logo {
+    height: 15%;
+    width: 15%;
+}
+
+#box0 {
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+}
+
+#main {
+    display: flex;
+    justify-content: center;
+}
+
+#box1 {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.349);
+    margin-top: 2%;
+    margin-bottom: 2%;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 2%;
+    padding-bottom: 5%;
+}
+
+#log_title {
+    color: aliceblue;
+    font-size: 48px;
+    font-family: "Agency FB";
+    text-align: center;
+}
+
+#log_nav {
+    color: aliceblue;
+    font-family: "Agency FB";
+    font-size: large;
+}
+
+#log_button {
+    text-align: center;
+    font-family: "Agency FB";
+    font-size: large;
+    width: 100%;
+}
+
+#log_button:hover {
+    color: aliceblue;
+    background-color: rgb(7, 153, 255);
+}
+
+#sign_up {
+    color: aliceblue;
+    font-family: "Agency FB";
+    font-size: large;
+    text-align: center;
+}
+
+a:link {
+    color: aliceblue;
+}
+
+a:visited {
+    color: aliceblue;
+}
+
+a:hover {
+    color: rgb(7, 153, 255);
+}
+
+#sign {
+    color: aliceblue;
+    font-family: "Agency FB";
+    font-size: large;
+    text-align: center;
+}
+
+p {
+    color: aliceblue;
+}
+
+#box2 {
+    border-style: solid;
+    border-color: rgb(0, 150, 117);
+    border-radius: 20px;
+    margin: 10%;
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Projet GLO-2005</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+</head>
+
+<body>
+    <header>
+        <div id="box0">
+
+        </div>
+    </header>
+
+    <main id="main">
+        <div id="box1">
+            <p id="log_title">Login</p>
+            <br>
+            <nav id="log_nav">
+                <form id="login_form" method="POST" action="/">
+                    <label>Email</label><br>
+                    <input type="email" name="log"><br><br>
+                    <label>Password</label><br>
+                    <input type="text" name="password"><br><br>
+                    <button type="submit" id="log_button">Login</button>
+                    <!--<a href="{{ url_for('main') }}"><button id="log_button">Login</button></a> -->
+                </form>
+            </nav>
+            <br><br>
+            <p id="inscription">Or <a href="{{ url_for('inscription') }}"><u>Sign Up</u></a></p>
+        </div>
+    </main>
+
+    <footer>
+
+
+    </footer>
+
+</body>
+
+</html>
