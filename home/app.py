@@ -100,8 +100,8 @@ def inscription():
         premium = request.form.get("premium") == "true"
 
         cursor = mysql.cursor()
-        cursor.execute("INSERT INTO utilisateurs (id, nom, courriel, age, mdp, premium) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (random.randint(0, 1000000), name, email, age, password, premium))
+        cursor.execute("INSERT INTO utilisateurs (id, nom, courriel, age, mdp, premium) VALUES (%s, %s, %s, %s, %s)",
+                       (name, email, age, password, premium))
         mysql.commit()
 
         cursor.close()
