@@ -1,8 +1,10 @@
 import os
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, session,url_for
 from flask import render_template
 import requests
 import uuid
+import schedule
+import time
 import random
 import pymysql.cursors
 from dotenv import load_dotenv
@@ -15,6 +17,7 @@ app.config['MYSQL_PORT'] = int(os.environ.get("PORT"))
 app.config['MYSQL_USER'] = os.environ.get("USER")
 app.config['MYSQL_PASSWORD'] = os.environ.get("PASSWORD")
 app.config['MYSQL_DB'] = os.environ.get("DATABASE")
+app.secret_key = os.environ.get('SECRET_KEY')
 
 mysql = pymysql.connect(
     host=app.config['MYSQL_HOST'],
@@ -25,22 +28,40 @@ mysql = pymysql.connect(
 )
 
 
-def get_stock_info(symbol):
+def update_BD_table_stocks():
     '''
     Fonction qui récupère les données sur l'API. KEY: 2c60e6e984a34692611edd82e4b4f308
     '''
     api_key = '2c60e6e984a34692611edd82e4b4f308'
-    url = f'https://financialmodelingprep.com/api/v3/quote-short/{symbol}?apikey={api_key}'
+    quote_url = 'https://financialmodelingprep.com/api/v3/quote/'
 
-    response = requests.get(url)
-    if response.status_code == 200:
-        stock_data = response.json()
-        if stock_data:
-            return stock_data[0]  # Retourne les données du titre
-        else:
-            return None
+    list_sym = ['AAPL', 'MSFT', 'AMZN', 'GOOGL', 'GOOG', 'FB', 'TSLA', 'NVDA', 'PYPL']
+
+    # Construire une chaîne de symboles séparés par des virgules pour la requête unique
+    symbols_str = ','.join(list_sym)
+
+    # Faire une requête pour obtenir les informations sur tous les titres en une seule fois
+    quote_response = requests.get(f'{quote_url}{symbols_str}?apikey={api_key}')
+    if quote_response.status_code == 200:
+        stocks = quote_response.json()
+        cursor = mysql.cursor()
+        for stock in stocks:
+            sym = stock['symbol']
+            name = stock['name']
+            prix = stock['price']
+            capt = stock['marketCap']
+            div = 0
+            vol = stock['volume']
+            fluct = stock['changesPercentage']
+
+            cursor.execute("INSERT INTO Stocks (ticker, nom, prix, capitalisation, dividende, fluctuation, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                       (sym, name, prix, capt, div, fluct, vol))
+            mysql.commit()
+
+        cursor.close()
+        return quote_response.json()
     else:
-        print("Erreur lors de la requête API:", response.status_code)
+        print("Erreur lors de la requête API:", quote_response.status_code)
         return None
 
 
@@ -80,6 +101,8 @@ def index():
         print(user)
         cursor.close()
         if user:
+            # Stocker le nom d'utilisateur dans la session
+            session['username'] = user[1]
             return redirect("/main")
         else:
             return redirect("/inscription")
@@ -97,11 +120,11 @@ def inscription():
         email = request.form.get("email")
         age = request.form.get("age")
         password = request.form.get("password")
-        premium = request.form.get("premium") == "true"
+        choix = request.form.get("premium") == "true"
 
         cursor = mysql.cursor()
-        cursor.execute("INSERT INTO utilisateurs (id, nom, courriel, age, mdp, premium) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (random.randint(0, 1000000), name, email, age, password, premium))
+        cursor.execute("INSERT INTO utilisateurs (uid, nom, courriel, age, mdp, choix) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (random.randint(111111, 999999), name, email, age, password, choix))
         mysql.commit()
 
         cursor.close()
@@ -110,14 +133,21 @@ def inscription():
 
 @app.route('/main')
 def main():
-    test_sql = 'SELECT * FROM utilisateurs;'
-    cursor = mysql.cursor()
-    cursor.execute(test_sql)
-    result = cursor.fetchall()
-    symbole = get_stock_info('GOOG')
+    # Récupérer le nom d'utilisateur depuis la session
+    username = session.get('username')
+    #update_BD_table_stocks()
+
+    with mysql.cursor() as cursor:
+        cursor.execute("SELECT * FROM Stocks")
+        stocks = cursor.fetchall()
+    print(stocks)
     cie = get_company_info('GOOG')
-    return render_template("main.html", result=result, symbole=symbole, cie=cie)
+    return render_template("main.html", stocks=stocks, cie=cie, username=username,)
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+    schedule.every(24).hours.do(update_BD_table_stocks)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

@@ -2,22 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>main</title>
+    <title>Projet GLO-2005</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
 </head>
 <body>
-    <!-- Test info titre -->
-    {% for info in symbole %}
-    <p>{{ info }} : {{ symbole[info] }}</p>
-    {% endfor %}
+    <header>
+        <div id="username">
+            <p>Bonjour {{ username }}</p>
+        </div>
+    </header>
+    <main>
+        <div id="fav_art">
+            <p>Favoris/Article</p>
+        </div>
+        <div id="cie_bilan">
+            <div id="cie">
+                <p>Cie</p>
+            </div>
+            <div id="bilan">
+                <p>Bilan</p>
+            </div>
 
-    <!-- Test BD -->
-    <p>{{ result }}</p>
+        </div>
+        <div id="info_stock">
+            <table id="table_stock">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Nom</th>
+                        <th>Prix</th>
+                        <th>Capitalisation</th>
+                        <th>Dividende</th>
+                        <th>Fluctuation</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                    <tr>
+                        <td>{{ stock[0] }}</td>
+                        <td>{{ stock[1] }}</td>
+                        <td>{{ stock[2] }}</td>
+                        <td>{{ stock[3] }}</td>
+                        <td>{{ stock[4] }}</td>
+                        <td>{{ stock[5] }}</td>
+                        <td>{{ stock[6] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Test info cie -->
-    {% for info in cie %}
-    <p>{{ info }} : {{ cie[info] }}</p>
-    {% endfor %}
+    </main>
+    <footer>
 
-
+    </footer>
 </body>
 </html>

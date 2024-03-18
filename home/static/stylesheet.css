@@ -95,3 +95,71 @@ p {
     border-radius: 20px;
     margin: 10%;
 }
+
+#username {
+    color: black;
+    font-size: x-large;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#fav_art {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.349);
+    width: 80%;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#cie_bilan {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#cie {
+    display: flex;
+    width: 45%;
+    margin-right: 10%;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.349);
+}
+
+#bilan {
+    display: flex;
+    width: 45%;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.349);
+}
+
+#info_stock {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.349);
+    width: 80%;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+#table_stock {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
