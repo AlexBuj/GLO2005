@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Projet GLO-2005</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+</head>
+<body>
+    <header>
+        <div id="cie">
+               <h2>Bilan financier de {{cie}} </h2>
+            <h4> Année fiscale 2023 </h4>
+        </div>
+    </header>
+    <div>
+        <ul>
+            <li> N: {{cie}} </li>
+            <li id="cik">  cik: {{cik}}</li>
+            <li id="coutOperation"> Coût d'opération: {{coutOperation}}</li>
+            <li id="coutRD"> Coût de recherche et développement: {{coutRD}}</li>
+            <li id="coutVente"> Coût de vente: {{coutVente}}</li>
+            <li id="revenue"> Revenue brut: {{revenue}}</li>
+            <li id="profit"> Profit brut: {{profit}}</li>
+        </ul>
+    </div>
+    <div id="compagnie">
+        <a href="cie.html"> Aperçu de {{cie_bilan}} <br> </a>
+        <a href="main.html"> Retour vers l'accueil </a>
+    </div>
+</body>
+</html>
