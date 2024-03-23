@@ -52,8 +52,8 @@ for _ in range(100):
     choix = random.randint(0, 1)
 
     # Créer une commande SQL pour insérer un client dans la table Utilisateurs
-    sql = "INSERT INTO Utilisateurs (uid, nom, courriel, age, mdp, choix) VALUES (%s, %s, %s, %s, %s, %s)"
-    values = (id_unique, nom, courriel, age, mot_de_passe, choix)
+    sql = "INSERT INTO Utilisateurs (courriel, uid, nom, age, mdp, choix) VALUES (%s, %s, %s, %s, %s, %s)"
+    values = (courriel, id_unique, nom, age, mot_de_passe, choix)
 
     # Exécuter la commande SQL
     with connection.cursor() as cursor:

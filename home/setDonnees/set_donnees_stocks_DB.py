@@ -44,12 +44,12 @@ def set_BD_table_stocks():
             name = stock['name']
             prix = stock['price']
             capt = stock['marketCap']
-            div = 0
+            avg = stock['priceAvg200']
             vol = stock['volume']
             fluct = stock['changesPercentage']
 
-            cursor.execute("INSERT INTO Stocks (ticker, nom, prix, capitalisation, dividende, fluctuation, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                       (sym, name, prix, capt, div, fluct, vol))
+            cursor.execute("INSERT INTO Stocks (ticker, nom, prix, capitalisation, avg200, fluctuation, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                       (sym, name, prix, capt, avg, fluct, vol))
 
 
         cursor.close()
