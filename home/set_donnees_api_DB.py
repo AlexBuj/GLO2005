@@ -19,7 +19,8 @@ connection = pymysql.connect(host=MYSQL_HOST,
                              port=MYSQL_PORT,
                              user=MYSQL_USER,
                              password=MYSQL_PASSWORD,
-                             database=MYSQL_DB)
+                             database=MYSQL_DB,
+                             autocommit=True)
 
 def read_file(path):
     file = open(path, 'r')
@@ -41,13 +42,13 @@ def set_BD_table_stocks():
     quote_response = requests.get(f'{quote_url}{symbols_str}?apikey={api_key}')
     if quote_response.status_code == 200:
         stocks = quote_response.json()
-        cursor = mysql.cursor()
+        cursor = connection.cursor()
         for stock in stocks:
             sym = stock['symbol']
             name = stock['name']
             prix = stock['price']
             capt = stock['marketCap']
-            div = stock['dividends']
+            div = 0
             vol = stock['volume']
             fluct = stock['changesPercentage']
 
@@ -62,7 +63,7 @@ def set_BD_table_stocks():
         return None
 
 
-
+set_BD_table_stocks()
 
 connection.close()
 
