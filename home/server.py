@@ -1,4 +1,5 @@
 import os
+import re
 from flask import Flask, request, redirect, session,url_for
 from flask import render_template
 import requests
@@ -122,7 +123,10 @@ def inscription():
         age = request.form.get("age")
         password = request.form.get("password")
         choix = request.form.get("premium") == "true"
+        emailPattern = r'^[^\.\s][\w\-\.{2,}]+@([\w-]+\.)+[\w-]{2,}$'
 
+        if not re.match(emailPattern, email):
+            print("wrong email format")
         cursor = mysql.cursor()
         cursor.execute("INSERT INTO utilisateurs (uid, nom, courriel, age, mdp, choix) VALUES (%s, %s, %s, %s, %s, %s)",
                        (random.randint(111111, 999999), name, email, age, password, choix))
