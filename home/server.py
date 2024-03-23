@@ -127,9 +127,13 @@ def inscription():
         password = request.form.get("password")
         choix = request.form.get("premium") == "true"
         emailPattern = r'^[^\.\s][\w\-\.{2,}]+@([\w-]+\.)+[\w-]{2,}$'
+        passwordPattern = r'.{6,50}$'
 
         if not re.match(emailPattern, email):
             print("wrong email format")
+        if not re.match(passwordPattern, password):
+            print("wrong password format")
+
         cursor = mysql.cursor()
         cursor.execute("INSERT INTO utilisateurs (uid, nom, courriel, age, mdp, choix) VALUES (%s, %s, %s, %s, %s, %s)",
                        (random.randint(111111, 999999), name, email, age, password, choix))
