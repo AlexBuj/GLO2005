@@ -28,6 +28,9 @@ mysql = pymysql.connect(
     autocommit=True
 )
 
+def read_file(path):
+    file = open(path, 'r')
+    return file.read().split('\n')
 
 def update_BD_table_stocks():
     '''
@@ -36,7 +39,7 @@ def update_BD_table_stocks():
     api_key = '2c60e6e984a34692611edd82e4b4f308'
     quote_url = 'https://financialmodelingprep.com/api/v3/quote/'
 
-    list_sym = ['AAPL', 'MSFT', 'AMZN', 'GOOGL', 'GOOG', 'FB', 'TSLA', 'NVDA', 'PYPL']
+    list_sym = read_file("listeStocks.txt")
 
     # Construire une chaîne de symboles séparés par des virgules pour la requête unique
     symbols_str = ','.join(list_sym)
