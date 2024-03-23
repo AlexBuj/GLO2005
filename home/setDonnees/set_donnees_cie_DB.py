@@ -37,19 +37,18 @@ def set_BD_table_cie():
     # Faire une requête pour obtenir les informations sur tous les titres en une seule fois
     cieProfile_response = requests.get(f'{cieProfile_url}{symbols_str}?apikey={api_key}')
     if cieProfile_response.status_code == 200:
-        stocks = cieProfile_response.json()
+        cies = cieProfile_response.json()
         cursor = connection.cursor()
-        for stock in stocks:
-            sym = stock['symbol']
-            name = stock['name']
-            prix = stock['price']
-            capt = stock['marketCap']
-            div = 0
-            vol = stock['volume']
-            fluct = stock['changesPercentage']
+        for cie in cies:
+            sym = cie['symbol']
+            name = cie['companyName']
+            sector = cie['sector']
+            descr = cie['description']
+            web = cie['website']
+            empl = cie['fullTimeEmployees']
 
-            cursor.execute("INSERT INTO Stocks (ticker, nom, prix, capitalisation, dividende, fluctuation, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                       (sym, name, prix, capt, div, fluct, vol))
+            cursor.execute("INSERT INTO Compagnie (nomOfficiel, ticker, secteur, description, siteWeb, employes) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (name, sym, sector, descr, web, empl))
 
 
         cursor.close()
