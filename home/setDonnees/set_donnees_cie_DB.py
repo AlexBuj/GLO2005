@@ -1,10 +1,6 @@
 import pymysql
-import random
-import hashlib
 import os
 from dotenv import load_dotenv
-import certifi
-import json
 import requests
 
 # Connexion à la base de données
@@ -26,12 +22,12 @@ def read_file(path):
     file = open(path, 'r')
     return file.read().split('\n')
 
-def set_BD_table_stocks():
+def set_BD_table_cie():
     '''
     Fonction qui récupère les données sur l'API. KEY: 2c60e6e984a34692611edd82e4b4f308
     '''
     api_key = '2c60e6e984a34692611edd82e4b4f308'
-    quote_url = 'https://financialmodelingprep.com/api/v3/quote/'
+    cieProfile_url = "https://financialmodelingprep.com/api/v3/profile/"
 
     list_sym = read_file("listeStocks.txt")
 
@@ -39,9 +35,9 @@ def set_BD_table_stocks():
     symbols_str = ','.join(list_sym)
 
     # Faire une requête pour obtenir les informations sur tous les titres en une seule fois
-    quote_response = requests.get(f'{quote_url}{symbols_str}?apikey={api_key}')
-    if quote_response.status_code == 200:
-        stocks = quote_response.json()
+    cieProfile_response = requests.get(f'{cieProfile_url}{symbols_str}?apikey={api_key}')
+    if cieProfile_response.status_code == 200:
+        stocks = cieProfile_response.json()
         cursor = connection.cursor()
         for stock in stocks:
             sym = stock['symbol']
@@ -57,24 +53,12 @@ def set_BD_table_stocks():
 
 
         cursor.close()
-        return quote_response.json()
+        return cieProfile_response.json()
     else:
-        print("Erreur lors de la requête API:", quote_response.status_code)
+        print("Erreur lors de la requête API:", cieProfile_response.status_code)
         return None
 
 
-set_BD_table_stocks()
+set_BD_table_cie()
 
 connection.close()
-
-
-
-
-
-
-
-
-
-
-
-
