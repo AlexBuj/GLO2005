@@ -16,8 +16,7 @@ CREATE TABLE Compagnie (nomOfficiel varchar(100), ticker varchar(6), secteur var
 CREATE TABLE Bilan (cik integer PRIMARY KEY, ticker varchar(5), coutOperation float, coutRD float,
                     coutVente float, revenue float, profit float, FOREIGN KEY Bilan(ticker)  REFERENCES  Stocks(ticker));
 
-CREATE TABLE Nouvelles (nid INT AUTO_INCREMENT PRIMARY KEY, titre varchar(100), image varchar(2000), texte varchar(2000));
-
+CREATE TABLE Nouvelles (nid INT AUTO_INCREMENT PRIMARY KEY, titre varchar(100), auteur varchar(50), image varchar(2000), texte varchar(2000), date DATE);
 
 
 
