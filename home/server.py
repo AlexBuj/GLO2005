@@ -162,13 +162,23 @@ def main():
 @app.route('/info')
 def info():
     sym = request.args.get('symbole')
-    print(sym)
     with mysql.cursor() as cursor:
         # Exécuter la requête SQL
         sql = "SELECT * FROM Compagnie WHERE ticker = %s"
         cursor.execute(sql, (sym,))
-        result = cursor.fetchall()
-        return jsonify(result)
+        result_cie = cursor.fetchall()
+
+    with mysql.cursor() as cursor:
+        # Exécuter la requête SQL
+        sql = "SELECT * FROM Bilan WHERE ticker = %s"
+        cursor.execute(sql, (sym,))
+        result_bilan = cursor.fetchall()
+
+    data = {
+        'cie': result_cie,
+        'bilan': result_bilan
+    }
+    return jsonify(data)
 
 
 if __name__ == '__main__':
