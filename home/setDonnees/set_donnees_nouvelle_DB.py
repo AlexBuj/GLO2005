@@ -29,10 +29,7 @@ def set_BD_table_nouvelles():
     api_key = '2c60e6e984a34692611edd82e4b4f308'
     nouvelles_url = "https://financialmodelingprep.com/api/v3/fmp/articles/"
 
-    list_nouv = read_file("listeNouvelles.txt")
 
-    # Construire une chaîne de symboles séparés par des virgules pour la requête unique
-    nouv_str = ','.join(list_nouv)
     # Faire une requête pour obtenir les informations sur tous les titres en une seule fois
     nouvelles_response = requests.get(f'{nouvelles_url}?apikey={api_key}')
     if nouvelles_response.status_code == 200:
