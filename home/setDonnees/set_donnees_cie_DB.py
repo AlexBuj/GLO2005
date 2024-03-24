@@ -40,16 +40,15 @@ def set_BD_table_cie():
         stocks = cieProfile_response.json()
         cursor = connection.cursor()
         for stock in stocks:
+            name = stock['companyName']
             sym = stock['symbol']
-            name = stock['name']
-            prix = stock['price']
-            capt = stock['marketCap']
-            div = 0
-            vol = stock['volume']
-            fluct = stock['changesPercentage']
+            secteur = stock['sector']
+            desc = stock['description']
+            ws = stock['website']
+            emp = stock['fullTimeEmployees']
 
-            cursor.execute("INSERT INTO Stocks (ticker, nom, prix, capitalisation, dividende, fluctuation, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                       (sym, name, prix, capt, div, fluct, vol))
+            cursor.execute("INSERT INTO Compagnie (NomOfficiel, ticker, secteur, description, siteweb, employes) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (name, sym, secteur, desc, ws, emp))
 
 
         cursor.close()

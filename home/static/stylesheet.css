@@ -1,8 +1,5 @@
 body {
     background-color: lightgrey;
-    /*background-image: url('/static/bg.jpg');
-    background-size:cover;
-    background-repeat: no-repeat;*/
 }
 
 #logo {
@@ -97,13 +94,15 @@ p {
 }
 
 #username {
-    color: black;
     font-size: x-large;
     width: 80%;
     margin-left: auto;
     margin-right: auto;
 }
 
+#username p {
+    color: black;
+}
 
 #fav_art {
     display: flex;
@@ -111,7 +110,7 @@ p {
     border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.349);
     width: 80%;
-    margin-top: 5%;
+    margin-top: 2%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -120,7 +119,7 @@ p {
     display: flex;
     flex-direction: row;
     width: 80%;
-    margin-top: 5%;
+    margin-top: 2%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -145,10 +144,22 @@ p {
     flex-direction: column;
     background-color: rgba(0, 0, 0, 0.349);
     width: 80%;
-    margin-top: 5%;
+    margin-top: 2%;
     margin-left: auto;
     margin-right: auto;
 }
+
+#info_stock button {
+    background-color: lightgrey;
+    height: 25%;
+    width: 25%;
+}
+
+#info_stock img {
+    height: 70%;
+    width: 70%;
+}
+
 #table_stock {
     border-collapse: collapse;
     width: 100%;
