@@ -40,7 +40,6 @@ function afficherEntreprise(info) {
 }
 
 function afficherBilan(info) {
-    console.log(info)
     var elementBilan = document.getElementById("bilan");
     elementBilan.innerHTML = ""; // Effacer le contenu précédent
 
@@ -54,4 +53,16 @@ function afficherBilan(info) {
     HTML_bilan += "</ul>";
 
     elementBilan.innerHTML = HTML_bilan;
+}
+
+
+function ajout_fav(button) {
+    var symbole = button.value;
+
+    // Effectuer une requête AJAX POST vers la route /insertion avec le symbole comme paramètre
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/insertion");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("symbole=" + encodeURIComponent(symbole));
+    //location.reload();
 }
