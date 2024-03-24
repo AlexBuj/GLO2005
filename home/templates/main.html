@@ -14,7 +14,11 @@
     </header>
     <main>
         <div id="fav_art">
-            <p>Favoris/Article</p>
+            {% if choix == True %}
+              <h1>Favoris</h1>
+            {% else %}
+              <h1>Article</h1>
+            {% endif %}
         </div>
         <div id="cie_bilan">
             <div id="cie">
@@ -43,7 +47,7 @@
                     {% for stock in stocks %}
                     <tr>
                         <td>
-                            {% if choix %}
+                            {% if choix == True %}
                                 <button id="fav{{ stocks[0] }}"><img src="{{ url_for('static', filename='fav.png') }}"></button>
                             {% endif %}
                             <button value='{{ stock[0] }}' onclick="afficher_info(this)"><img src="{{ url_for('static', filename='info.png') }}"></button>

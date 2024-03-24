@@ -149,6 +149,11 @@ def main():
     # Récupérer le nom d'utilisateur depuis la session
     username = session.get('name')
     choix = session.get('choix')
+    # Traiter le choix encodé en byte
+    if choix == b'\x01':
+        choix = True
+    else:
+        choix = False
 
     with mysql.cursor() as cursor:
         cursor.execute("SELECT * FROM Stocks")
