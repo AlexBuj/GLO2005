@@ -149,6 +149,11 @@ def main():
     # Récupérer le nom d'utilisateur depuis la session
     username = session.get('name')
     choix = session.get('choix')
+    # Traiter le choix encodé en byte
+    if choix == b'\x01':
+        choix = True
+    else:
+        choix = False
 
     with mysql.cursor() as cursor:
         cursor.execute("SELECT * FROM Stocks")
@@ -162,13 +167,23 @@ def main():
 @app.route('/info')
 def info():
     sym = request.args.get('symbole')
-    print(sym)
     with mysql.cursor() as cursor:
         # Exécuter la requête SQL
         sql = "SELECT * FROM Compagnie WHERE ticker = %s"
         cursor.execute(sql, (sym,))
-        result = cursor.fetchall()
-        return jsonify(result)
+        result_cie = cursor.fetchall()
+
+    with mysql.cursor() as cursor:
+        # Exécuter la requête SQL
+        sql = "SELECT * FROM Bilan WHERE ticker = %s"
+        cursor.execute(sql, (sym,))
+        result_bilan = cursor.fetchall()
+
+    data = {
+        'cie': result_cie,
+        'bilan': result_bilan
+    }
+    return jsonify(data)
 
 
 if __name__ == '__main__':

@@ -1,37 +1,57 @@
 function afficher_info(button) {
-    // Exécuter une requête AJAX vers le serveur Flask
     var symbole = button.value;
 
+    // Effectuer une requête AJAX vers la route /info avec le symbole comme paramètre
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/info?symbole=" + encodeURIComponent(symbole));
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 // Convertir la réponse JSON en objet JavaScript
-                var resultat = JSON.parse(xhr.responseText)[0];
+                var data = JSON.parse(xhr.responseText);
 
-                // Récupérer l'élément où afficher le résultat
-                var elementCie = document.getElementById("cie");
+                // Afficher les informations sur l'entreprise
+                afficherEntreprise(data.cie);
 
-                // Effacer le contenu précédent de l'élément
-                elementCie.innerHTML = "";
-
-                // Créer une liste HTML pour afficher les éléments
-                var contenuHTML = "<ul>";
-                contenuHTML += "<li>Nom officiel: " + resultat[0] + "</li>";
-                contenuHTML += "<li id=\"ticker\">Ticker: " + resultat[1] + "</li>";
-                contenuHTML += "<li id=\"secteur\">Secteur d'opération: " + resultat[2] + "</li>";
-                contenuHTML += "<li id=\"description\">Siteweb: " + resultat[4] + "</li>";
-                contenuHTML += "<li id=\"revenueTTM\">Employés: " + resultat[5] + "</li>";
-                contenuHTML += "<li id=\"profitTTM\">Description: " + resultat[3] + "</li>";
-                contenuHTML += "</ul>";
-
-                // Mettre à jour le contenu de l'élément avec l'ID 'cie'
-                elementCie.innerHTML = contenuHTML;
+                // Afficher les données du bilan
+                afficherBilan(data.bilan);
             } else {
                 console.error("Erreur lors de la requête : " + xhr.status);
             }
         }
     };
     xhr.send();
+}
+
+function afficherEntreprise(info) {
+    var elementCie = document.getElementById("cie");
+    elementCie.innerHTML = ""; // Effacer le contenu précédent
+
+    var HTML_cie = "<ul>";
+    HTML_cie += "<li>Nom officiel: " + info[0][0] + "</li>";
+    HTML_cie += "<li>Ticker: " + info[0][1] + "</li>";
+    HTML_cie += "<li>Secteur d'opération: " + info[0][2] + "</li>";
+    HTML_cie += "<li>Description: " + info[0][3] + "</li>";
+    HTML_cie += "<li>Siteweb: <a href=\"" + info[0][4] + "\">" + info[0][4] + "</a></li>";
+    HTML_cie += "<li>Employés: " + info[0][5] + "</li>";
+    HTML_cie += "</ul>";
+
+    elementCie.innerHTML = HTML_cie;
+}
+
+function afficherBilan(info) {
+    console.log(info)
+    var elementBilan = document.getElementById("bilan");
+    elementBilan.innerHTML = ""; // Effacer le contenu précédent
+
+    var HTML_bilan = "<ul>";
+    HTML_bilan += "<li>Central Index Key: " + info[0][0] + "</li>";
+    HTML_bilan += "<li>Operating Expenses: " + info[0][2] + "</li>";
+    HTML_bilan += "<li>R&D Expenses: " + info[0][3] + "</li>";
+    HTML_bilan += "<li>Selling: " + info[0][4] + "</li>";
+    HTML_bilan += "<li>Revenue: " + info[0][4] + "</li>";
+    HTML_bilan += "<li>Gross Profit: " + info[0][6] + "</li>";
+    HTML_bilan += "</ul>";
+
+    elementBilan.innerHTML = HTML_bilan;
 }
