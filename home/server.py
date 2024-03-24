@@ -1,6 +1,6 @@
 import os
 import re
-from flask import Flask, request, redirect, session,url_for
+from flask import Flask, request, redirect, session, jsonify, url_for
 from flask import render_template
 import requests
 import uuid
@@ -106,8 +106,9 @@ def index():
         print(user)
         cursor.close()
         if user:
-            # Stocker le nom d'utilisateur dans la session
-            session['username'] = user[1]
+            # Stocker le nom d'utilisateur et le choix dans la session
+            session['name'] = user[2]
+            session['choix'] = user[5]
             return redirect("/main")
         else:
             return redirect("/inscription")
@@ -146,15 +147,28 @@ def inscription():
 @app.route('/main')
 def main():
     # Récupérer le nom d'utilisateur depuis la session
-    username = session.get('username')
-    #update_BD_table_stocks()
+    username = session.get('name')
+    choix = session.get('choix')
 
     with mysql.cursor() as cursor:
         cursor.execute("SELECT * FROM Stocks")
         stocks = cursor.fetchall()
-    print(stocks)
-    cie = get_company_info('GOOG')
-    return render_template("main.html", stocks=stocks, cie=cie, username=username,)
+    with mysql.cursor() as cursor:
+        cursor.execute("SELECT * FROM Compagnie")
+        cie = cursor.fetchall()
+    return render_template("main.html", stocks=stocks, cie=cie, username=username, choix=choix,)
+
+
+@app.route('/info')
+def info():
+    sym = request.args.get('symbole')
+    print(sym)
+    with mysql.cursor() as cursor:
+        # Exécuter la requête SQL
+        sql = "SELECT * FROM Compagnie WHERE ticker = %s"
+        cursor.execute(sql, (sym,))
+        result = cursor.fetchall()
+        return jsonify(result)
 
 
 if __name__ == '__main__':

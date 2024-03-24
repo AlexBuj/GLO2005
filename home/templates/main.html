@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Projet GLO-2005</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </head>
 <body>
     <header>
@@ -28,11 +29,12 @@
             <table id="table_stock">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Ticker</th>
                         <th>Nom</th>
                         <th>Prix</th>
                         <th>Capitalisation</th>
-                        <th>Dividende</th>
+                        <th>AVG 200</th>
                         <th>Fluctuation</th>
                         <th>Volume</th>
                     </tr>
@@ -40,6 +42,12 @@
                 <tbody>
                     {% for stock in stocks %}
                     <tr>
+                        <td>
+                            {% if choix %}
+                                <button id="fav{{ stocks[0] }}"><img src="{{ url_for('static', filename='fav.png') }}"></button>
+                            {% endif %}
+                            <button value='{{ stock[0] }}' onclick="afficher_info(this)"><img src="{{ url_for('static', filename='info.png') }}"></button>
+                        </td>
                         <td>{{ stock[0] }}</td>
                         <td>{{ stock[1] }}</td>
                         <td>{{ stock[2] }}</td>

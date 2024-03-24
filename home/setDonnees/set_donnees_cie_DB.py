@@ -39,6 +39,7 @@ def set_BD_table_cie():
     if cieProfile_response.status_code == 200:
         cies = cieProfile_response.json()
         cursor = connection.cursor()
+
         for cie in cies:
             sym = cie['symbol']
             name = cie['companyName']
@@ -49,7 +50,6 @@ def set_BD_table_cie():
 
             cursor.execute("INSERT INTO Compagnie (nomOfficiel, ticker, secteur, description, siteWeb, employes) VALUES (%s, %s, %s, %s, %s, %s)",
                        (name, sym, sector, descr, web, empl))
-
 
         cursor.close()
         return cieProfile_response.json()
