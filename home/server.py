@@ -169,7 +169,10 @@ def main():
             cursor.execute(fav_query, (sym,))
             favoris = cursor.fetchall()
             favs.append(favoris[0])
-    return render_template("main.html", stocks=stocks, favs=favs, username=username, choix=choix,)
+    with mysql.cursor() as cursor:
+        cursor.execute("SELECT titre, auteur, image, texte, date FROM Nouvelles")
+        nouvelles = cursor.fetchall()
+    return render_template("main.html", stocks=stocks, favs=favs, username=username, choix=choix, nouvelles=nouvelles)
 
 
 @app.route('/info')
