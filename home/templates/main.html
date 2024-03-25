@@ -4,35 +4,78 @@
     <meta charset="UTF-8">
     <title>Projet GLO-2005</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </head>
 <body>
     <header>
         <div id="username">
-            <p>Bonjour {{ username }}</p>
+            <p><b>Bonjour {{ username }}</b></p>
         </div>
     </header>
     <main>
         <div id="fav_art">
-            <p>Favoris/Article</p>
+            {% if choix == True %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th><b>Favoris</b></th>
+                            <th>Ticker</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Capitalisation</th>
+                            <th>AVG 200</th>
+                            <th>Fluctuation</th>
+                            <th>Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fav in favs %}
+                            <tr>
+                                <td>
+                                    <button class="table_bouton"><img src="{{ url_for('static', filename='remove.png') }}"></button>
+                                </td>
+                                <td>{{ fav[0] }}</td>
+                                <td>{{ fav[1] }}</td>
+                                <td>{{ fav[2] }}</td>
+                                <td>{{ fav[3] }}</td>
+                                <td>{{ fav[4] }}</td>
+                                <td>{{ fav[5] }}</td>
+                                <td>{{ fav[6] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+            {% else %}
+              <h1>Article</h1>
+                <div id="nouvelles">
+                    {% for nouvelle in nouvelles %}
+                        <h3>{{nouvelle[0]}}</h3>
+                        <h4>{{nouvelle[1]}}</h4>
+                        <img src="{{nouvelle[2]}}" alt="Image couldn't load">
+                        <p>{{nouvelle[3]}}<br><br>{{nouvelle[4]}}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
         <div id="cie_bilan">
             <div id="cie">
-                <a href="cie.html">Cie</a>
+                <p>Compagnie information</p>
             </div>
             <div id="bilan">
-                 <a href="bilan.html"><br>Bilan</a>
+                 <p>Financial statements</p>
             </div>
         <br>
         </div>
         <div id="info_stock">
-            <table id="table_stock">
+            <table>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Ticker</th>
                         <th>Nom</th>
                         <th>Prix</th>
                         <th>Capitalisation</th>
-                        <th>Dividende</th>
+                        <th>AVG 200</th>
                         <th>Fluctuation</th>
                         <th>Volume</th>
                     </tr>
@@ -40,12 +83,26 @@
                 <tbody>
                     {% for stock in stocks %}
                     <tr>
+                        <td>
+                            {% if choix == True %}
+                                <button  class="table_bouton" value='{{ stock[0] }}' onclick="ajout_fav(this)">
+                                    <img src="{{ url_for('static', filename='fav.png') }}"></button>
+                            {% endif %}
+                            <button  class="table_bouton" value='{{ stock[0] }}' onclick="afficher_info(this)">
+                                <img src="{{ url_for('static', filename='info.png') }}"></button>
+                        </td>
                         <td>{{ stock[0] }}</td>
                         <td>{{ stock[1] }}</td>
-                        <td>{{ stock[2] }}</td>
+                        <td>{{ stock[2] }} $</td>
                         <td>{{ stock[3] }}</td>
-                        <td>{{ stock[4] }}</td>
-                        <td>{{ stock[5] }}</td>
+                        <td>{{ stock[4] }} $</td>
+                        <td>
+                            {% if stock[5] > 0 %}
+                                <p class="green">{{ stock[5] }} %</p>
+                            {% else %}
+                                <p class="red">{{ stock[5] }} %</p>
+                            {% endif %}
+                        </td>
                         <td>{{ stock[6] }}</td>
                     </tr>
                     {% endfor %}

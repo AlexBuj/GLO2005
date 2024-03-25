@@ -1,6 +1,6 @@
 import os
 import re
-from flask import Flask, request, redirect, session,url_for
+from flask import Flask, request, redirect, session, jsonify, url_for
 from flask import render_template
 import requests
 import uuid
@@ -40,7 +40,7 @@ def update_BD_table_stocks():
     api_key = '2c60e6e984a34692611edd82e4b4f308'
     quote_url = 'https://financialmodelingprep.com/api/v3/quote/'
 
-    list_sym = read_file("listeStocks.txt")
+    list_sym = read_file("setDonnees/listeStocks.txt")
 
     # Construire une chaîne de symboles séparés par des virgules pour la requête unique
     symbols_str = ','.join(list_sym)
@@ -104,11 +104,12 @@ def index():
         cursor = mysql.cursor()
         cursor.execute(findUser, (username, hashed_password))
         user = cursor.fetchone()
-        print(user)
         cursor.close()
         if user:
-            # Stocker le nom d'utilisateur dans la session
-            session['username'] = user[1]
+            # Stocker le nom d'utilisateur et le choix dans la session
+            session['email'] = user[0]
+            session['name'] = user[2]
+            session['choix'] = user[5]
             return redirect("/main")
         else:
             return redirect("/inscription")
@@ -147,15 +148,69 @@ def inscription():
 @app.route('/main')
 def main():
     # Récupérer le nom d'utilisateur depuis la session
-    username = session.get('username')
-    #update_BD_table_stocks()
-
+    username = session.get('name')
+    choix = session.get('choix')
+    email = session.get('email')
+    # Traiter le choix encodé en byte
+    if choix == b'\x01':
+        choix = True
+    else:
+        choix = False
+    favs = []
     with mysql.cursor() as cursor:
         cursor.execute("SELECT * FROM Stocks")
         stocks = cursor.fetchall()
-    print(stocks)
-    cie = get_company_info('GOOG')
-    return render_template("main.html", stocks=stocks, cie=cie, username=username,)
+
+        liste_fav_query = "SELECT ticker FROM sFavoris WHERE courriel = %s"
+        cursor.execute(liste_fav_query, (email,))
+        liste_fav = cursor.fetchall()
+        for fav in liste_fav:
+            sym = fav[0]
+            fav_query = "SELECT * FROM Stocks WHERE ticker = %s"
+            cursor.execute(fav_query, (sym,))
+            favoris = cursor.fetchall()
+            favs.append(favoris[0])
+    with mysql.cursor() as cursor:
+        cursor.execute("SELECT titre, auteur, image, texte, date FROM Nouvelles")
+        nouvelles = cursor.fetchall()
+    return render_template("main.html", stocks=stocks, favs=favs, username=username, choix=choix, nouvelles=nouvelles)
+
+
+@app.route('/info')
+def info():
+    sym = request.args.get('symbole')
+    with mysql.cursor() as cursor:
+        # Exécuter la requête SQL
+        sql = "SELECT * FROM Compagnie WHERE ticker = %s"
+        cursor.execute(sql, (sym,))
+        result_cie = cursor.fetchall()
+
+    with mysql.cursor() as cursor:
+        # Exécuter la requête SQL
+        sql = "SELECT * FROM Bilan WHERE ticker = %s"
+        cursor.execute(sql, (sym,))
+        result_bilan = cursor.fetchall()
+
+    data = {
+        'cie': result_cie,
+        'bilan': result_bilan
+    }
+    return jsonify(data)
+
+
+@app.route('/insertion', methods=['POST'])
+def insertion():
+    sym = request.form.get('symbole')
+    email = session.get('email')
+    try:
+        with mysql.cursor() as cursor:
+            # Insérer la valeur dans la base de données
+            sql = "INSERT INTO sFavoris VALUES (%s, %s)ON DUPLICATE KEY UPDATE ticker = ticker;"
+            cursor.execute(sql, (email, sym,))
+        return '', 204  # Pas de contenu à renvoyer, statut HTTP 204 pour indiquer que la requête a réussi
+    except Exception as e:
+        print(str(e))
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':

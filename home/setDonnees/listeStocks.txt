@@ -31,7 +31,6 @@ FI
 FTNT
 GILD
 GOOG
-GOOGL
 HON
 ILMN
 INTC
@@ -99,9 +98,3 @@ GEHC
 ASML
 TEAM
 ADSK
-
-
-
-
-
-

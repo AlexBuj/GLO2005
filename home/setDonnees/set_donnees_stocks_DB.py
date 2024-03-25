@@ -1,10 +1,6 @@
 import pymysql
-import random
-import hashlib
 import os
 from dotenv import load_dotenv
-import certifi
-import json
 import requests
 
 # Connexion à la base de données
@@ -19,7 +15,8 @@ connection = pymysql.connect(host=MYSQL_HOST,
                              port=MYSQL_PORT,
                              user=MYSQL_USER,
                              password=MYSQL_PASSWORD,
-                             database=MYSQL_DB)
+                             database=MYSQL_DB,
+                             autocommit=True)
 
 def read_file(path):
     file = open(path, 'r')
@@ -41,18 +38,18 @@ def set_BD_table_stocks():
     quote_response = requests.get(f'{quote_url}{symbols_str}?apikey={api_key}')
     if quote_response.status_code == 200:
         stocks = quote_response.json()
-        cursor = mysql.cursor()
+        cursor = connection.cursor()
         for stock in stocks:
             sym = stock['symbol']
             name = stock['name']
             prix = stock['price']
             capt = stock['marketCap']
-            div = stock['dividends']
+            avg = stock['priceAvg200']
             vol = stock['volume']
             fluct = stock['changesPercentage']
 
-            cursor.execute("INSERT INTO Stocks (ticker, nom, prix, capitalisation, dividende, fluctuation, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                       (sym, name, prix, capt, div, fluct, vol))
+            cursor.execute("INSERT INTO Stocks (ticker, nom, prix, capitalisation, avg200, fluctuation, volume) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                       (sym, name, prix, capt, avg, fluct, vol))
 
 
         cursor.close()
@@ -62,7 +59,7 @@ def set_BD_table_stocks():
         return None
 
 
-
+set_BD_table_stocks()
 
 connection.close()
 
