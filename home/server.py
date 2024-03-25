@@ -9,7 +9,7 @@ import time
 import random
 import pymysql.cursors
 from dotenv import load_dotenv
-
+from UtilityFunction import hash_password
 app = Flask(__name__)
 
 load_dotenv()
@@ -97,11 +97,12 @@ def index():
     if request.method == "POST":
         username = request.form.get("log")
         password = request.form.get("password")
+        hashed_password = hash_password.hash_password(password)
         findUser = 'SELECT * FROM utilisateurs WHERE courriel = %s AND mdp = %s;'
         print(username)
-        print(password)
+        print(hashed_password)
         cursor = mysql.cursor()
-        cursor.execute(findUser, (username, password))
+        cursor.execute(findUser, (username, hashed_password))
         user = cursor.fetchone()
         print(user)
         cursor.close()
@@ -133,10 +134,10 @@ def inscription():
             print("wrong email format")
         if not re.match(passwordPattern, password):
             print("wrong password format")
-
+        hashed_password = hash_password.hash_password(password)
         cursor = mysql.cursor()
         cursor.execute("INSERT INTO utilisateurs (uid, nom, courriel, age, mdp, choix) VALUES (%s, %s, %s, %s, %s, %s)",
-                       (random.randint(111111, 999999), name, email, age, password, choix))
+                       (random.randint(111111, 999999), name, email, age, hashed_password, choix))
         mysql.commit()
 
         cursor.close()
