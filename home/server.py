@@ -99,15 +99,12 @@ def index():
         password = request.form.get("password")
         hashed_password = hash_password.hash_password(password)
         findUser = 'SELECT * FROM utilisateurs WHERE courriel = %s AND mdp = %s;'
-        print(username)
-        print(hashed_password)
         cursor = mysql.cursor()
         cursor.execute(findUser, (username, hashed_password))
         user = cursor.fetchone()
         cursor.close()
         if user:
             # Stocker le nom d'utilisateur et le choix dans la session
-            print(user)
             session['email'] = user[0]
             session['name'] = user[2]
             session['choix'] = user[5]
@@ -137,7 +134,6 @@ def inscription():
         if not re.match(passwordPattern, password):
             print("wrong password format")
         hashed_password = hash_password.hash_password(password)
-        print(hashed_password)
         cursor = mysql.cursor()
         cursor.execute("INSERT INTO utilisateurs (uid, nom, courriel, age, mdp, choix) VALUES (%s, %s, %s, %s, %s, %s)",
                        (random.randint(111111, 999999), name, email, age, hashed_password, choix))
