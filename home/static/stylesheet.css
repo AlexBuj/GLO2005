@@ -107,7 +107,6 @@ p {
 #fav_art {
     display: flex;
     flex-direction: column;
-    border-radius: 20px;
     background-color: rgba(0, 0, 0, 0.349);
     width: 80%;
     margin-top: 2%;
@@ -149,8 +148,26 @@ p {
     margin-right: auto;
 }
 
-#info_stock button {
-    background-color: lightgrey;
+.table_bouton {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.table_bouton:hover {
+    transform: scale(1.15);
+}
+
+.table_bouton:active {
+    transform: scale(1.15);
+}
+
+.green {
+    color: #01d401;
+}
+
+.red {
+    color: red;
 }
 
 #info_stock img {

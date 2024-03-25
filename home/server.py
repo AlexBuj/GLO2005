@@ -103,10 +103,10 @@ def index():
         cursor = mysql.cursor()
         cursor.execute(findUser, (username, password))
         user = cursor.fetchone()
-        print(user)
         cursor.close()
         if user:
             # Stocker le nom d'utilisateur et le choix dans la session
+            session['email'] = user[0]
             session['name'] = user[2]
             session['choix'] = user[5]
             return redirect("/main")
@@ -149,22 +149,27 @@ def main():
     # Récupérer le nom d'utilisateur depuis la session
     username = session.get('name')
     choix = session.get('choix')
+    email = session.get('email')
     # Traiter le choix encodé en byte
     if choix == b'\x01':
         choix = True
     else:
         choix = False
-
+    favs = []
     with mysql.cursor() as cursor:
         cursor.execute("SELECT * FROM Stocks")
         stocks = cursor.fetchall()
-    with mysql.cursor() as cursor:
-        cursor.execute("SELECT * FROM Compagnie")
-        cie = cursor.fetchall()
-    with mysql.cursor() as cursor:
-        cursor.execute("SELECT titre, auteur, image, texte, date FROM Nouvelles")
-        nouvelles = cursor.fetchall()
-    return render_template("main.html", stocks=stocks, cie=cie, username=username, choix=choix, nouvelles=nouvelles)
+
+        liste_fav_query = "SELECT ticker FROM sFavoris WHERE courriel = %s"
+        cursor.execute(liste_fav_query, (email,))
+        liste_fav = cursor.fetchall()
+        for fav in liste_fav:
+            sym = fav[0]
+            fav_query = "SELECT * FROM Stocks WHERE ticker = %s"
+            cursor.execute(fav_query, (sym,))
+            favoris = cursor.fetchall()
+            favs.append(favoris[0])
+    return render_template("main.html", stocks=stocks, favs=favs, username=username, choix=choix,)
 
 
 @app.route('/info')
@@ -187,6 +192,21 @@ def info():
         'bilan': result_bilan
     }
     return jsonify(data)
+
+
+@app.route('/insertion', methods=['POST'])
+def insertion():
+    sym = request.form.get('symbole')
+    email = session.get('email')
+    try:
+        with mysql.cursor() as cursor:
+            # Insérer la valeur dans la base de données
+            sql = "INSERT INTO sFavoris VALUES (%s, %s)ON DUPLICATE KEY UPDATE ticker = ticker;"
+            cursor.execute(sql, (email, sym,))
+        return '', 204  # Pas de contenu à renvoyer, statut HTTP 204 pour indiquer que la requête a réussi
+    except Exception as e:
+        print(str(e))
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
