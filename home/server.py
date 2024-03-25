@@ -161,7 +161,10 @@ def main():
     with mysql.cursor() as cursor:
         cursor.execute("SELECT * FROM Compagnie")
         cie = cursor.fetchall()
-    return render_template("main.html", stocks=stocks, cie=cie, username=username, choix=choix,)
+    with mysql.cursor() as cursor:
+        cursor.execute("SELECT titre, auteur, image, texte, date FROM Nouvelles")
+        nouvelles = cursor.fetchall()
+    return render_template("main.html", stocks=stocks, cie=cie, username=username, choix=choix, nouvelles=nouvelles)
 
 
 @app.route('/info')
