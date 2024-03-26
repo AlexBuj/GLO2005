@@ -46,12 +46,12 @@
                     </tbody>
             </table>
             {% else %}
-              <h1>Article</h1>
+              <h1>Articles</h1>
                 <div id="nouvelles">
                     {% for nouvelle in nouvelles %}
                         <h3>{{nouvelle[0]}}</h3>
                         <h4>{{nouvelle[1]}}</h4>
-                        <img src="{{nouvelle[2]}}" alt="Image couldn't load">
+                        <img id="newsImage" src="{{nouvelle[2]}}" alt="Image couldn't load">
                         <p>{{nouvelle[3]}}<br><br>{{nouvelle[4]}}</p>
                     {% endfor %}
                 </div>

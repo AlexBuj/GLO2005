@@ -170,7 +170,7 @@ def main():
             favs.append(favoris[0])
     with mysql.cursor() as cursor:
         cursor.execute("SELECT titre, auteur, image, texte, date FROM Nouvelles")
-        nouvelles = cursor.fetchall()
+        nouvelles = cursor.fetchmany(5)
     return render_template("main.html", stocks=stocks, favs=favs, username=username, choix=choix, nouvelles=nouvelles)
 
 

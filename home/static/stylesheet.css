@@ -189,3 +189,17 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
+
+#nouvelles {
+    width: 900px ;
+}
+
+#newsImage {
+    width: 512px ;
+    height: 288px ;
+    background-size: 100%;
+    object-fit: contain;
+    margin-left: auto;
+    margin-right: auto;
+}
+
